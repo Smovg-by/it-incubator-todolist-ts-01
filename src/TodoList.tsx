@@ -2,13 +2,15 @@ import React, { ChangeEvent, useState } from 'react'
 import { FilterValuesType, TaskType } from './App'
 
 type propsTodoListType = {
+  todoListID: string
   title: string
   tasks: Array<TaskType>
   filter: FilterValuesType
-  removeTask: (taskID: string) => void
-  addTask: (title: string) => void
-  changeTodoListFilter: (filterValue: FilterValuesType) => void
-  changeTaskStatus: (taskID: string, newValue: boolean) => void
+  removeTask: (taskID: string, todoListID: string) => void
+  addTask: (title: string, todoListID: string) => void
+  changeTodoListFilter: (filterValue: FilterValuesType, todoListID: string) => void
+  changeTaskStatus: (taskID: string, newValue: boolean, todoListID: string) => void
+  removeTodoList: (taskID: string)=>void
 }
 
 function TodoList (props: propsTodoListType) {
@@ -19,7 +21,7 @@ function TodoList (props: propsTodoListType) {
   const onClickAddTask = () => {
     const validatedTitle = title.trim()
     if (validatedTitle) {
-      props.addTask(validatedTitle)
+      props.addTask(validatedTitle, props.todoListID)
     } else {
       setError(true)
     }
@@ -44,14 +46,14 @@ function TodoList (props: propsTodoListType) {
         <input
           type='checkbox'
           checked={task.isDone}
-          onChange={e => props.changeTaskStatus(task.id, e.target.checked)
+          onChange={e => props.changeTaskStatus(task.id, e.target.checked, props.todoListID)
           }
         />
         <span className={taskClass}>{task.title}</span>
 
         <button
           onClick={function () {
-            props.removeTask(task.id)
+            props.removeTask(task.id, props.todoListID)
           }}
         >
           X
@@ -64,7 +66,7 @@ function TodoList (props: propsTodoListType) {
 
   return (
     <div>
-      <h3>{props.title}</h3>
+      <h3>{props.title}<button onClick={()=>{props.removeTodoList(props.todoListID)}}>X</button></h3>
       <div>
         <input
           className={error ? 'error' : ''}
@@ -79,7 +81,7 @@ function TodoList (props: propsTodoListType) {
         <button
           className={props.filter === 'all' ? 'activeFilter' : ''}
           onClick={function () {
-            props.changeTodoListFilter('all')
+            props.changeTodoListFilter('all', props.todoListID)
           }}
         >
           All
@@ -87,7 +89,7 @@ function TodoList (props: propsTodoListType) {
         <button
           className={props.filter === 'active' ? 'activeFilter' : ''}
           onClick={function () {
-            props.changeTodoListFilter('active')
+            props.changeTodoListFilter('active', props.todoListID)
           }}
         >
           Active
@@ -95,7 +97,7 @@ function TodoList (props: propsTodoListType) {
         <button
           className={props.filter === 'completed' ? 'activeFilter' : ''}
           onClick={function () {
-            props.changeTodoListFilter('completed')
+            props.changeTodoListFilter('completed', props.todoListID)
           }}
         >
           Completed
