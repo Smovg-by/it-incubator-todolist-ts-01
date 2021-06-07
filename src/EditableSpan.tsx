@@ -2,10 +2,11 @@ import React, { useState, ChangeEvent } from 'react'
 
 type EditableSpanPropsType = {
   title: string
-  taskId?: string
-  listId: string
-  changeTaskTitle?: (id: string, title: string, todolistId: string) => void
-  changeListTitle?: (title: string, todolistId: string) => void
+  onChange: (newTitle: string) => void
+  // taskId?: string
+  // listId: string
+  // changeTaskTitle?: (id: string, title: string, todolistId: string) => void
+  // changeListTitle?: (title: string, todolistId: string) => void
 }
 
 export function EditableSpan (props: EditableSpanPropsType) {
@@ -15,17 +16,12 @@ export function EditableSpan (props: EditableSpanPropsType) {
 
   const activateEditMode = () => {
     setEditMode(true)
+    setTitle(props.title)
   }
 
   const activateViewMode = () => {
-    if (props.taskId && props.changeTaskTitle) {
-      props.changeTaskTitle(props.taskId, title, props.listId)
-      setEditMode(false)
-    }
-    if (!props.taskId && props.changeListTitle) {
-      props.changeListTitle(title, props.listId)
-      setEditMode(false)
-    }
+    setEditMode(false)
+    props.onChange(title)
   }
 
   const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {

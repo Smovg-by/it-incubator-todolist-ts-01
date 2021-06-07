@@ -37,15 +37,17 @@ export function Todolist (props: PropsType) {
   const onCompletedClickHandler = () =>
     props.changeFilter('completed', props.id)
 
+  const onChangeListTitle = (title: string) => {
+    props.changeListTitle(title, props.id)
+  }
+
   //------UI
   return (
     <div>
       <h3>
-        {/* {props.title} */}
         <EditableSpan
           title={props.title}
-          listId={props.id}
-          changeListTitle={props.changeListTitle}
+          onChange={newTitle => onChangeListTitle(newTitle)}
         />
         <button onClick={removeTodolist}>x</button>
       </h3>
@@ -57,7 +59,10 @@ export function Todolist (props: PropsType) {
             let newIsDoneValue = e.currentTarget.checked
             props.changeTaskStatus(t.id, newIsDoneValue, props.id)
           }
-
+          const onChangeTaskTitle = (title: string) => {
+            props.changeTaskTitle(t.id, title, props.id)
+          }
+          //list of tasks below
           return (
             <li key={t.id} className={t.isDone ? 'is-done' : ''}>
               <input
@@ -67,9 +72,9 @@ export function Todolist (props: PropsType) {
               />
               <EditableSpan
                 title={t.title}
-                taskId={t.id}
-                listId={props.id}
-                changeTaskTitle={props.changeTaskTitle}
+                onChange={newTitle => {
+                  onChangeTaskTitle(newTitle)
+                }}
               />
 
               <button onClick={onClickHandler}>x</button>
