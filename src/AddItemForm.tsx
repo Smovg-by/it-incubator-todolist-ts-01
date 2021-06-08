@@ -1,4 +1,6 @@
-import React, { ChangeEvent, useState, KeyboardEvent } from 'react'
+import { IconButton, TextField } from '@material-ui/core'
+import { AddBox, ErrorOutline } from '@material-ui/icons'
+import React, { ChangeEvent, KeyboardEvent, useState } from 'react'
 
 type AddItemFormPropsType = {
   addItem: (title: string) => void
@@ -11,10 +13,10 @@ export function AddItemForm (props: AddItemFormPropsType) {
   const addItem = () => {
     if (title.trim() !== '') {
       props.addItem(title)
-      setTitle('')
     } else {
       setError('Title is required')
     }
+    setTitle('')
   }
 
   const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -30,14 +32,27 @@ export function AddItemForm (props: AddItemFormPropsType) {
 
   return (
     <div>
-      <input
+      <TextField
+        label='Type your task here'
+        variant='outlined'
+        value={title}
+        onChange={onChangeHandler}
+        onKeyPress={onKeyPressHandler}
+        helperText={error && 'Title is required'}
+      />
+
+      {/* <input
         value={title}
         onChange={onChangeHandler}
         onKeyPress={onKeyPressHandler}
         className={error ? 'error' : ''}
-      />
-      <button onClick={addItem}>+</button>
-      {error && <div className='error-message'>{error}</div>}
+      /> */}
+      {/* <button onClick={addItem}>+</button> */}
+      <IconButton onClick={addItem} color={'primary'}>
+        <AddBox />
+      </IconButton>
+
+      {/* {error && <div className='error-message'>{error}</div>} */}
     </div>
   )
 }
