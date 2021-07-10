@@ -1,12 +1,18 @@
-import React, { useReducer, useState } from 'react';
+import React, {useReducer, useState} from 'react';
 import './App.css';
-import { TaskType, Todolist } from './Todolist';
-import { v1 } from 'uuid';
-import { AddItemForm } from './AddItemForm';
-import { AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography } from '@material-ui/core';
-import { Menu } from '@material-ui/icons';
-import { addTodolistAC, changeTodolistFilterAC, changeTodolistTitleAC, removeTodolistAC, todolistsReducer } from './state/todolists-reducer';
-import { addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, tasksReducer } from './state/tasks-reducer';
+import {TaskType, Todolist} from './Todolist';
+import {v1} from 'uuid';
+import {AddItemForm} from './AddItemForm';
+import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from '@material-ui/core';
+import {Menu} from '@material-ui/icons';
+import {
+    addTodolistAC,
+    changeTodolistFilterAC,
+    changeTodolistTitleAC,
+    removeTodolistAC,
+    todolistsReducer
+} from './state/todolists-reducer';
+import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, tasksReducer} from './state/tasks-reducer';
 
 export type FilterValuesType = "all" | "active" | "completed";
 export type TodolistType = {
@@ -20,76 +26,66 @@ export type TasksStateType = {
 }
 
 
-function App() {
+function AppWithReducers() {
     let todolistId1 = v1();
     let todolistId2 = v1();
 
     let [todolists, dispatchToTodolists] = useReducer(todolistsReducer, [
-        { id: todolistId1, title: "What to learn", filter: "all" },
-        { id: todolistId2, title: "What to buy", filter: "all" }
+        {id: todolistId1, title: "What to learn", filter: "all"},
+        {id: todolistId2, title: "What to buy", filter: "all"}
     ])
 
     let [tasks, dispatchToTasks] = useReducer(tasksReducer, {
         [todolistId1]: [
-            { id: v1(), title: "HTML&CSS", isDone: true },
-            { id: v1(), title: "JS", isDone: true }
+            {id: v1(), title: "HTML&CSS", isDone: true},
+            {id: v1(), title: "JS", isDone: true}
         ],
         [todolistId2]: [
-            { id: v1(), title: "Milk", isDone: true },
-            { id: v1(), title: "React Book", isDone: true }
+            {id: v1(), title: "Milk", isDone: true},
+            {id: v1(), title: "React Book", isDone: true}
         ]
     });
 
-    // TASKS REDUCERS
     function removeTask(id: string, todolistId: string) {
-        dispatchToTasks(removeTaskAC(id, todolistId))
+        const action = removeTaskAC(id, todolistId);
+        dispatchToTasks(action);
     }
 
     function addTask(title: string, todolistId: string) {
-        dispatchToTasks(addTaskAC(title, todolistId))
+        const action = addTaskAC(title, todolistId);
+        dispatchToTasks(action);
     }
 
     function changeStatus(id: string, isDone: boolean, todolistId: string) {
-        dispatchToTasks(changeTaskStatusAC(id, isDone, todolistId))
+        const action = changeTaskStatusAC(id, isDone, todolistId);
+        dispatchToTasks(action);
     }
 
     function changeTaskTitle(id: string, newTitle: string, todolistId: string) {
-        dispatchToTasks(changeTaskTitleAC(id, newTitle, todolistId))
+        const action = changeTaskTitleAC(id, newTitle, todolistId);
+        dispatchToTasks(action);
     }
 
-    // TODOLISTS REDUCERS
-
     function changeFilter(value: FilterValuesType, todolistId: string) {
-        dispatchToTodolists(changeTodolistFilterAC(todolistId, value))
+        const action = changeTodolistFilterAC(todolistId, value);
+        dispatchToTodolists(action);
     }
 
     function removeTodolist(id: string) {
-        let action = removeTodolistAC(id)
-        dispatchToTasks(action)
-        dispatchToTodolists(action)
+        const action = removeTodolistAC(id);
+        dispatchToTasks(action);
+        dispatchToTodolists(action);
     }
 
     function changeTodolistTitle(id: string, title: string) {
-        dispatchToTodolists(changeTodolistTitleAC(id, title))
+        const action = changeTodolistTitleAC(id, title);
+        dispatchToTodolists(action);
     }
 
     function addTodolist(title: string) {
-
-        // let newTodolistId = v1()
-
-        let action = addTodolistAC(title)
-
-        dispatchToTodolists(action)
-        dispatchToTasks(action)
-
-        // dispatchToTasks(addTaskAC(title, newTodolistId))
-
-        // let newTodolist: TodolistType = { id: newTodolistId, title: title, filter: 'all' };
-        // setTodolists([newTodolist, ...todolists]);
-        // setTasks({
-        //     ...tasks,
-        //     [newTodolistId]: []
-        // })
+        const action = addTodolistAC(title);
+        dispatchToTasks(action);
+        dispatchToTodolists(action);
     }
 
     return (
@@ -97,7 +93,7 @@ function App() {
             <AppBar position="static">
                 <Toolbar>
                     <IconButton edge="start" color="inherit" aria-label="menu">
-                        <Menu />
+                        <Menu/>
                     </IconButton>
                     <Typography variant="h6">
                         News
@@ -106,8 +102,8 @@ function App() {
                 </Toolbar>
             </AppBar>
             <Container fixed>
-                <Grid container style={{ padding: "20px" }}>
-                    <AddItemForm addItem={addTodolist} />
+                <Grid container style={{padding: "20px"}}>
+                    <AddItemForm addItem={addTodolist}/>
                 </Grid>
                 <Grid container spacing={3}>
                     {
@@ -123,7 +119,7 @@ function App() {
                             }
 
                             return <Grid item>
-                                <Paper style={{ padding: "10px" }}>
+                                <Paper style={{padding: "10px"}}>
                                     <Todolist
                                         key={tl.id}
                                         id={tl.id}
@@ -148,4 +144,4 @@ function App() {
     );
 }
 
-export default App;
+export default AppWithReducers;
